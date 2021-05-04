@@ -11,7 +11,8 @@ class Exchange:
     @staticmethod
     def get_price(quote: str, base: str, amount: str):
         if quote == base:
-            raise ExchangeException(f'Нельзя перевести одинаковые валюты {base}.')
+            raise ExchangeException(
+                f'Нельзя перевести одинаковые валюты {base}.')
 
         try:
             quote_ticker = keys[quote]
@@ -28,7 +29,7 @@ class Exchange:
         except ValueError:
             raise ExchangeException(f'Не смог обработать количество {amount}')
 
-        r = requests.get(f'https://api.exchangeratesapi.io/latest?base={quote_ticker}&symbols={base_ticker}')
-        total_base = json.loads(r.content)["rates"][keys[base]]
-        total_base = total_base * amount
+        r = requests.get(
+            f'https://min-api.cryptocompare.com/data/price?fsym={base_ticker}&tsyms={quote_ticker}')
+        total_base = float(json.loads(r.content)[keys[quote]]) * amount
         return total_base
